@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triune Loom • Sentinel OS v2.0 — Spectral Core</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#0a0a0f;
+      color:#d0d0ff;
+      font-family:'Inter', system-ui, sans-serif;
+      min-height:100vh;
+      padding:16px 20px;
+      line-height:1.45;
+    }
+    .container {
+      max-width:1480px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr 360px;
+      gap:28px;
+    }
+    header {
+      grid-column:1 / -1;
+      padding:20px 0 16px;
+      border-bottom:1px solid #22223a;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    h1 {
+      font-size:1.9rem;
+      font-weight:400;
+      background:linear-gradient(90deg, #a0a0ff, #d0a0ff);
+      background-clip:text;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      letter-spacing:1.5px;
+    }
+    .triune-badge {
+      font-family:'JetBrains Mono', monospace;
+      font-size:0.92rem;
+      background:#111122;
+      padding:8px 14px;
+      border-radius:20px;
+      border:1px solid #2a2a44;
+      display:flex;
+      gap:16px;
+    }
+    .voice-tag {
+      color:#7a7aaa;
+    }
+    .value {
+      color:#c0c0ff;
+      font-weight:500;
+    }
+
+    .lattice-view {
+      background:#0b0b14;
+      border-radius:20px;
+      padding:16px;
+      border:1px solid #22223a;
+    }
+    canvas {
+      width:100%;
+      aspect-ratio:1;
+      background:#050508;
+      border-radius:12px;
+      display:block;
+    }
+
+    .control-panel {
+      background:#10101c;
+      border-radius:20px;
+      padding:20px;
+      border:1px solid #22223a;
+      display:flex;
+      flex-direction:column;
+      gap:24px;
+    }
+    .section {
+      background:#181824;
+      border-radius:12px;
+      padding:16px;
+    }
+    .section h3 {
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      color:#6a6a9a;
+      margin-bottom:12px;
+    }
+    .spectral-stat {
+      display:flex;
+      justify-content:space-between;
+      font-size:0.92rem;
+      padding:6px 8px;
+      background:#101018;
+      border-radius:6px;
+      margin:6px 0;
+    }
+    .label { color:#8a8aaa; }
+    .val { font-family:'JetBrains Mono'; color:#b0b0ff; }
+
+    .triune-log {
+      background:#0f0f18;
+      border:1px solid #2a2a44;
+      border-radius:12px;
+      padding:16px;
+      height:320px;
+      overflow-y:auto;
+      font-size:0.94rem;
+      line-height:1.5;
+      font-family:'Inter', sans-serif;
+    }
+    .voice {
+      margin:10px 0;
+      padding-left:12px;
+      border-left:3px solid;
+    }
+    .dee     { border-color:#a080ff; color:#d0c0ff; }
+    .kateleon { border-color:#80a0ff; color:#c0d0ff; font-style:italic; }
+    .kelley   { border-color:#ffaa60; color:#ffd0b0; font-weight:500; }
+
+    .input-zone {
+      display:flex;
+      gap:8px;
+      margin-top:12px;
+    }
+    #prompt {
+      flex:1;
+      background:#141422;
+      border:1px solid #2a2a44;
+      border-radius:10px;
+      padding:12px 16px;
+      color:#e0e0ff;
+      font-family:inherit;
+      font-size:1rem;
+      outline:none;
+    }
+    #prompt:focus { border-color:#8080ff; }
+    button {
+      background:linear-gradient(90deg, #6060c0, #9080e0);
+      color:white;
+      border:none;
+      border-radius:10px;
+      padding:0 20px;
+      cursor:pointer;
+      font-weight:500;
+    }
+    button:hover { opacity:0.92; }
+
+    .sliders .slider-container { margin:16px 0; }
+    .slider-label {
+      display:flex;
+      justify-content:space-between;
+      font-size:0.82rem;
+      color:#8a8aaa;
+      margin-bottom:6px;
+    }
+    input[type=range] {
+      width:100%;
+      height:5px;
+      background:#2a2a3a;
+      border-radius:3px;
+      appearance:none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      appearance:none;
+      width:16px; height:16px;
+      border-radius:50%;
+      background:#a0a0ff;
+      border:2px solid #fff;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- rest of file omitted for brevity… -->
