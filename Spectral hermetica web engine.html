@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel OS v2.0 - Spectral Core</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #e0e0ff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: #12121a;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(100,100,255,0.2);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2a2a3a;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #a0a0ff, #ffa0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .spectral-badge {
+            background: #1a1a2a;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 14px;
+            border: 1px solid #3a3a5a;
+            display: flex;
+            gap: 16px;
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-label {
+            color: #8a8aaa;
+        }
+
+        .badge-value {
+            color: #fff;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+
+        .canvas-container {
+            background: #0a0a12;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid #2a2a3a;
+        }
+
+        canvas {
+            width: 100%;
+            aspect-ratio: 1;
+            display: block;
+            border-radius: 16px;
+            background: #050508;
+        }
+
+        .control-panel {
+            background: #0f0f17;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid #2a2a3a;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .panel-section {
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6a6a8a;
+            margin-bottom: 16px;
+        }
+
+        .spectral-display {
+            display: grid;
+            gap: 12px;
+        }
+
+        .spectral-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            padding: 8px;
+            background: #12121a;
+            border-radius: 8px;
+        }
+
+        .spectral-row .label {
+            color: #8a8aaa;
+        }
+
+        .spectral-row .value {
+            font-family: 'JetBrains Mono', monospace;
+            color: #a0a0ff;
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            background: #2a2a3a;
+            padding: 2px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .mode-cell {
+            aspect-ratio: 1;
+            background: #1a1a24;
+            border-radius: 2px;
+            transition: all 0.1s ease;
+        }
+
+        .slider-container {
+            margin: 16px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #8a8aaa;
+            margin-bottom: 8px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #2a2a3a;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #a0a0ff;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .critical-marker {
+            width: 2px;
+            height: 12px;
+            background: #ff6a6a;
+            position: relative;
+            top: -8px;
+        }
+
+        .gauge {
+            width: 100%;
+            height: 4px;
+            background: #2a2a3a;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a4aff, #a0a0ff);
+            transition: width 0.1s ease;
+            width: 0%;
+        }
+
+        .mode-visualization {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .mode-bar {
+            height: 4px;
+            background: #2a2a3a;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .mode-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #2a2a3a;
+            display: flex;
+            justify-content: space-between;
+            color: #6a6a8a;
+            font-size: 12px;
+        }
+
+        .info-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #5a5a7a;
+            color: #8a8aaa;
+            font-size: 11px;
+            font-family: serif;
+            font-style: italic;
+            cursor: help;
+            flex-shrink: 0;
+        }
+
+        .info-tooltip {
+            display: none;
+            position: absolute;
+            top: calc(100% + 12px);
+            right: -8px;
+            width: 300px;
+            background: #1e1e2e;
+            border: 1px solid #3a3a5a;
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-style: normal;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #c0c0e0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .info-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            right: 16px;
+            border: 6px solid transparent;
+            border-bottom-color: #3a3a5a;
+        }
+
+        .info-icon:hover .info-tooltip {
+            display: block;
+        }
+
+        .info-tooltip .tooltip-title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-tooltip .tooltip-formula {
+            font-family: 'JetBrains Mono', monospace;
+            background: #12121a;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-size: 12px;
+            color: #a0a0ff;
+            text-align: center;
+        }
+
+        .info-tooltip .tooltip-range {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #6a6a8a;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="title">SENTINEL OS v2.0 // SPECTRAL CORE</div>
+        <div class="spectral-badge">
+            <div class="badge-item">
+                <span class="badge-label">λ₂</span>
+                <span class="badge-value" id="lambda2-display">---</span>
+            </div>
+            <div class="badge-item">
+                <span class="badge-label">λ_max</span>
+                <span class="badge-value" id="lambdaMax-display">---</span>
+            </div>
+            <div class="badge-item">
+                <span class="badge-label">g_c</span>
+                <span class="badge-value" id="gc-display">---</span>
+            </div>
+            <div class="badge-item">
+                <span class="badge-label">r(t)</span>
+                <span class="badge-value" id="order-display">---</span>
+                <span class="info-icon">i
+                    <div class="info-tooltip">
+                        <div class="tooltip-title">Order Parameter r(t)</div>
+                        <div>The Kuramoto order parameter measures the global phase coherence of all oscillators. It is the magnitude of the mean phase vector.</div>
+                        <div class="tooltip-formula">r(t) = (1/N) | &Sigma; e^(i&theta;&#8202;<sub>j</sub>) |</div>
+                        <div>Each oscillator's phase is treated as a unit vector on the complex plane. <strong>r</strong> is the length of their centroid.</div>
+                        <div class="tooltip-range">
+                            <span>0 = fully incoherent</span>
+                            <span>1 = perfect sync</span>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="canvas-container">
+            <canvas id="latticeCanvas" width="500" height="500"></canvas>
+        </div>
+
+        <div class="control-panel">
+            <div class="panel-section">
+                <div class="section-title">Spectral Topology</div>
+                <div class="spectral-display">
+                    <div class="spectral-row">
+                        <span class="label">Algebraic connectivity</span>
+                        <span class="value" id="lambda2-value">0.0000</span>
+                    </div>
+                    <div class="spectral-row">
+                        <span class="label">Synchronization threshold</span>
+                        <span class="value" id="lambdaMax-value">0.0000</span>
+                    </div>
+                    <div class="spectral-row">
+                        <span class="label">Critical coupling</span>
+                        <span class="value" id="gc-value">0.0000</span>
+                    </div>
+                    <div class="spectral-row">
+                        <span class="label">Mode projection</span>
+                        <span class="value" id="projection-value">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="section-title">Dominant Eigenmode</div>
+                <div id="dominantMode-grid" class="mode-grid"></div>
+                <div style="font-size: 11px; color: #6a6a8a; margin-top: 8px; text-align: center;">
+                    The lattice's natural synchronization pattern
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="section-title">Control Surface</div>
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Coupling strength (g)</span>
+                        <span id="g-value">0.00</span>
+                    </div>
+                    <div style="position: relative;">
+                        <input type="range" id="g-slider" class="slider" min="0" max="1" step="0.001" value="0.35">
+                        <div id="critical-marker" class="critical-marker" style="position: absolute; left: 35%;"></div>
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Noise level</span>
+                        <span id="noise-value">0.02</span>
+                    </div>
+                    <input type="range" id="noise-slider" class="slider" min="0" max="0.1" step="0.001" value="0.02">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Plasticity rate</span>
+                        <span id="plasticity-value">0.01</span>
+                    </div>
+                    <input type="range" id="plasticity-slider" class="slider" min="0" max="0.05" step="0.001" value="0.01">
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="section-title">Mode Activity</div>
+                <div id="mode-activity" class="mode-visualization"></div>
+                <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: #6a6a8a;">
+                    <span>Mode 1</span>
+                    <span>Mode 2</span>
+                    <span>Mode 3</span>
+                    <span>Mode 4</span>
+                    <span>Mode 5</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>λ₂ determines fragmentation threshold</span>
+        <span>g_c = 2/(π·g(0)·λ_max) anchors slider</span>
+        <span>dominant eigenmode reveals structural truth</span>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    const size = 5;
+    const N = size * size;
+    
+    const hubCoords = [
+        [0,0],[0,2],[0,4],
+        [2,0],[2,4],
+        [4,0],[4,2],[4,4],
+        [1,1],[1,2],[1,3],
+        [2,1],[2,3],
+        [3,1],[3,2],[3,3]
+    ];
+    
+    function idx(r, c) { return r * size + c; }
+    
+    const hubs = new Set();
+    hubCoords.forEach(([r, c]) => hubs.add(idx(r, c)));
+    
+    const K_nn = 0.05;
+    const K_hn = 0.10;
+    const K_hh = 0.18;
+    
+    function buildAdjacency() {
+        const A = Array(N).fill().map(() => Array(N).fill(0));
+        
+        for (let r = 0; r < size; r++) {
+            for (let c = 0; c < size; c++) {
+                const i = idx(r, c);
+                const neighbors = [];
+                if (r > 0) neighbors.push([r-1, c]);
+                if (r < size-1) neighbors.push([r+1, c]);
+                if (c > 0) neighbors.push([r, c-1]);
+                if (c < size-1) neighbors.push([r, c+1]);
+                
+                for (const [nr, nc] of neighbors) {
+                    const j = idx(nr, nc);
+                    if (hubs.has(i) && hubs.has(j)) A[i][j] = K_hh;
+                    else if (hubs.has(i) || hubs.has(j)) A[i][j] = K_hn;
+                    else A[i][j] = K_nn;
+                }
+            }
+        }
+        
+        for (let i = 0; i < N; i++) {
+            for (let j = i+1; j < N; j++) {
+                const avg = (A[i][j] + A[j][i]) / 2;
+                A[i][j] = avg;
+                A[j][i] = avg;
+            }
+        }
+        
+        return A;
+    }
+    
+    function computeSpectrum(A) {
+        function topEigenpairs(matrix, k = 5, iterations = 2000) {
+            const pairs = [];
+            let remainingMatrix = matrix.map(row => [...row]);
+            
+            for (let p = 0; p < k; p++) {
+                let v = Array(N).fill(1).map(() => Math.random() - 0.5);
+                let norm = Math.sqrt(v.reduce((sum, val) => sum + val*val, 0));
+                v = v.map(x => x / norm);
+                
+                for (let iter = 0; iter < iterations; iter++) {
+                    const Mv = Array(N).fill(0);
+                    for (let i = 0; i < N; i++)
+                        for (let j = 0; j < N; j++)
+                            Mv[i] += remainingMatrix[i][j] * v[j];
+                    norm = Math.sqrt(Mv.reduce((sum, val) => sum + val*val, 0));
+                    v = Mv.map(x => x / norm);
+                }
+                
+                const Mv = Array(N).fill(0);
+                for (let i = 0; i < N; i++)
+                    for (let j = 0; j < N; j++)
+                        Mv[i] += remainingMatrix[i][j] * v[j];
+                let lambda = 0;
+                for (let i = 0; i < N; i++) lambda += v[i] * Mv[i];
+                
+                pairs.push({ lambda, vector: v });
+                
+                for (let i = 0; i < N; i++)
+                    for (let j = 0; j < N; j++)
+                        remainingMatrix[i][j] -= lambda * v[i] * v[j];
+            }
+            
+            return pairs;
+        }
+        
+        const degrees = Array(N).fill(0);
+        for (let i = 0; i < N; i++)
+            for (let j = 0; j < N; j++)
+                degrees[i] += A[i][j];
+        
+        const L = Array(N).fill().map(() => Array(N).fill(0));
+        for (let i = 0; i < N; i++) {
+            L[i][i] = degrees[i];
+            for (let j = 0; j < N; j++)
+                if (i !== j) L[i][j] = -A[i][j];
+        }
+        
+        const adjPairs = topEigenpairs(A, 5);
+        const lapPairs = topEigenpairs(L, 5);
+        
+        adjPairs.sort((a, b) => b.lambda - a.lambda);
+        lapPairs.sort((a, b) => a.lambda - b.lambda);
+        
+        return {
+            lambdaMax: adjPairs[0].lambda,
+            lambda2: lapPairs[1] ? lapPairs[1].lambda : 0,
+            dominantMode: adjPairs[0].vector,
+            topModes: adjPairs.slice(0, 5).map(p => p.vector)
+        };
+    }
+    
+    const A = buildAdjacency();
+    const spectrum = computeSpectrum(A);
+    
+    const lambdaMax = spectrum.lambdaMax;
+    const lambda2 = spectrum.lambda2;
+    const dominantMode = spectrum.dominantMode;
+    const topModes = spectrum.topModes;
+    
+    const avgDegree = A.reduce((sum, row) => sum + row.reduce((s, val) => s + (val > 0 ? 1 : 0), 0), 0) / N;
+    const g0 = avgDegree * K_nn;
+    const gCritical = 2 / (Math.PI * g0 * lambdaMax);
+    
+    let theta = Array(N).fill(0).map(() => (Math.random() * 2 - 1) * Math.PI);
+    let frequencies = Array(N).fill(0).map(() => (Math.random() - 0.5) * 0.5);
+    
+    let params = { g: 0.35, noise: 0.02, plasticity: 0.01 };
+    
+    const canvas = document.getElementById('latticeCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    document.getElementById('lambda2-display').textContent = lambda2.toFixed(4);
+    document.getElementById('lambdaMax-display').textContent = lambdaMax.toFixed(4);
+    document.getElementById('gc-display').textContent = gCritical.toFixed(4);
+    document.getElementById('lambda2-value').textContent = lambda2.toFixed(4);
+    document.getElementById('lambdaMax-value').textContent = lambdaMax.toFixed(4);
+    document.getElementById('gc-value').textContent = gCritical.toFixed(4);
+    
+    const criticalMarker = document.getElementById('critical-marker');
+    const markerPos = Math.min(100, Math.max(0, (gCritical / 1) * 100));
+    criticalMarker.style.left = `${markerPos}%`;
+    
+    function renderDominantMode() {
+        const grid = document.getElementById('dominantMode-grid');
+        grid.innerHTML = '';
+        const minVal = Math.min(...dominantMode);
+        const maxVal = Math.max(...dominantMode);
+        
+        for (let i = 0; i < N; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'mode-cell';
+            const norm = (dominantMode[i] - minVal) / (maxVal - minVal || 1);
+            const r = Math.floor(100 + 155 * norm);
+            const b = Math.floor(100 + 155 * (1 - norm));
+            cell.style.backgroundColor = `rgb(${r}, 100, ${b})`;
+            grid.appendChild(cell);
+        }
+    }
+    renderDominantMode();
+    
+    function initModeActivity() {
+        const modeActivity = document.getElementById('mode-activity');
+        modeActivity.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'mode-bar';
+            const fill = document.createElement('div');
+            fill.className = 'mode-bar-fill';
+            fill.id = `mode-fill-${i}`;
+            fill.style.backgroundColor = `hsl(${i * 50}, 80%, 60%)`;
+            bar.appendChild(fill);
+            modeActivity.appendChild(bar);
+        }
+    }
+    initModeActivity();
+    
+    function computeProjections() {
+        let sumCos = 0, sumSin = 0;
+        for (let i = 0; i < N; i++) {
+            sumCos += Math.cos(theta[i]);
+            sumSin += Math.sin(theta[i]);
+        }
+        const orderParam = Math.sqrt(sumCos * sumCos + sumSin * sumSin) / N;
+        document.getElementById('order-display').textContent = orderParam.toFixed(4);
+
+        let proj = 0, normTheta = 0;
+        for (let i = 0; i < N; i++) {
+            proj += theta[i] * dominantMode[i];
+            normTheta += theta[i] * theta[i];
+        }
+        normTheta = Math.sqrt(normTheta) || 1;
+        document.getElementById('projection-value').textContent = (proj / normTheta).toFixed(2);
+        
+        for (let m = 0; m < Math.min(5, topModes.length); m++) {
+            let modeProj = 0;
+            for (let i = 0; i < N; i++) modeProj += Math.abs(theta[i] * topModes[m][i]);
+            modeProj = modeProj / N;
+            const fill = document.getElementById(`mode-fill-${m}`);
+            if (fill) fill.style.width = `${Math.min(100, modeProj * 200)}%`;
+        }
+    }
+    
+    function updateDynamics() {
+        const dt = 0.1;
+        const dTheta = Array(N).fill(0);
+        
+        for (let i = 0; i < N; i++) {
+            let coupling = 0;
+            for (let j = 0; j < N; j++)
+                if (A[i][j] > 0) coupling += A[i][j] * Math.sin(theta[j] - theta[i]);
+            dTheta[i] = frequencies[i] + params.g * coupling;
+        }
+        
+        for (let i = 0; i < N; i++) {
+            theta[i] += dt * dTheta[i];
+            theta[i] += (Math.random() - 0.5) * params.noise;
+            frequencies[i] += params.plasticity * Math.sin(theta[i] - frequencies[i] * dt) * dt;
+        }
+        
+        computeProjections();
+    }
+    
+    function drawLattice() {
+        const w = 500, h = 500;
+        const cellSize = w / size;
+        ctx.clearRect(0, 0, w, h);
+        
+        for (let r1 = 0; r1 < size; r1++) {
+            for (let c1 = 0; c1 < size; c1++) {
+                const i1 = idx(r1, c1);
+                const x1 = c1 * cellSize + cellSize/2;
+                const y1 = r1 * cellSize + cellSize/2;
+                
+                if (c1 < size-1) {
+                    const i2 = idx(r1, c1+1);
+                    const alpha = A[i1][i2] / K_hh;
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(100, 100, 255, ${alpha})`;
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo((c1+1)*cellSize + cellSize/2, y1);
+                    ctx.stroke();
+                }
+                if (r1 < size-1) {
+                    const i2 = idx(r1+1, c1);
+                    const alpha = A[i1][i2] / K_hh;
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(100, 100, 255, ${alpha})`;
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x1, (r1+1)*cellSize + cellSize/2);
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        for (let r = 0; r < size; r++) {
+            for (let c = 0; c < size; c++) {
+                const i = idx(r, c);
+                const x = c * cellSize + cellSize/2;
+                const y = r * cellSize + cellSize/2;
+                const phase = (theta[i] / Math.PI + 1) / 2;
+                const hue = phase * 360;
+                const radius = hubs.has(i) ? 12 : 8;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                if (Math.abs(theta[i] * dominantMode[i]) > 0.5) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, radius + 2, 0, 2 * Math.PI);
+                    ctx.strokeStyle = '#ffff80';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    function animate() {
+        updateDynamics();
+        drawLattice();
+        requestAnimationFrame(animate);
+    }
+    animate();
+    
+    document.getElementById('g-slider').addEventListener('input', (e) => {
+        params.g = parseFloat(e.target.value);
+        document.getElementById('g-value').textContent = params.g.toFixed(3);
+    });
+    
+    document.getElementById('noise-slider').addEventListener('input', (e) => {
+        params.noise = parseFloat(e.target.value);
+        document.getElementById('noise-value').textContent = params.noise.toFixed(3);
+    });
+    
+    document.getElementById('plasticity-slider').addEventListener('input', (e) => {
+        params.plasticity = parseFloat(e.target.value);
+        document.getElementById('plasticity-value').textContent = params.plasticity.toFixed(3);
+    });
+    
+    window.resetState = function() {
+        theta = Array(N).fill(0).map(() => (Math.random() * 2 - 1) * Math.PI);
+        frequencies = Array(N).fill(0).map(() => (Math.random() - 0.5) * 0.5);
+    };
+})();
+</script>
+
+</body>
+</html>
