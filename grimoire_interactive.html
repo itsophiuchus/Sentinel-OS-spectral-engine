@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimoire Universalis</title>
+    <style>
+        body { font-family: 'Georgia', serif; background: linear-gradient(to bottom, #000428, #004e92); color: #f0f0f0; margin: 0; padding: 20px; }
+        h1, h2 { color: #ffd700; text-align: center; text-shadow: 0 0 10px #ffd700; }
+        .stage { background: rgba(255,255,255,0.1); margin: 20px 0; padding: 20px; border-radius: 10px; border-left: 5px solid #ffd700; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; background: rgba(0,0,0,0.5); }
+        th, td { padding: 10px; text-align: left; border: 1px solid #ffd700; }
+        th { background: #ffd700; color: #000; }
+        .tradition { cursor: pointer; transition: background 0.3s; }
+        .tradition:hover { background: rgba(255,215,0,0.2); }
+        .content { display: none; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.7); border-radius: 5px; }
+        nav ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; }
+        nav li { margin: 5px; }
+        nav a { color: #ffd700; text-decoration: none; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px; transition: all 0.3s; }
+        nav a:hover { background: #ffd700; color: #000; }
+    </style>
+</head>
+<body>
+    <h1>THE GRIMOIRE UNIVERSALIS</h1>
+    <h2>Concordance of 24 Traditions <br> Sub Figura XXIV</h2>
+
+    <nav>
+        <ul id="toc"></ul>
+    </nav>
+
+    <div id="content">
+        <div class="stage" id="nigredo">
+            <h2>NIGREDO - Dissolution Black Work Breaking</h2>
+            <table>
+                <thead><tr><th>STAGE</th><th>TRADITION</th><th>GLYPH</th><th>CORE</th></tr></thead>
+                <tbody>
+                    <tr class="tradition" onclick="toggleContent('gnosticism')"><td>Nigredo</td><td>Gnosticism</td><td>Spark beyond demiurge</td><td>Spark beyond demiurge</td></tr>
+                    <tr class="tradition" onclick="toggleContent('shamanism')"><td>Nigredo</td><td>Shamanism</td><td>Soul journey retrieval</td><td>Soul journey retrieval</td></tr>
+                    <tr class="tradition" onclick="toggleContent('voudon')"><td>Nigredo</td><td>Voudon</td><td>Spirit service reciprocity</td><td>Spirit service reciprocity</td></tr>
+                    <tr class="tradition" onclick="toggleContent('enochian')"><td>Nigredo</td><td>Enochian--Thelema</td><td>Aethyr travel True Will</td><td>Aethyr travel True Will</td></tr>
+                    <tr class="tradition" onclick="toggleContent('chaos')"><td>Nigredo</td><td>Chaos Magick</td><td>Belief as tool</td><td>Belief as tool</td></tr>
+                    <tr class="tradition" onclick="toggleContent('necronomicon')"><td>Nigredo</td><td>Necronomicon</td><td>Cosmic horror interface</td><td>Cosmic horror interface</td></tr>
+                    <tr class="tradition" onclick="toggleContent('discordianism')"><td>Nigredo</td><td>Discordianism</td><td>Sacred chaos</td><td>Sacred chaos</td></tr>
+                </tbody>
+            </table>
+            <div id="gnosticism" class="content">Detailed content for Gnosticism would go here from full doc.</div>
+            <div id="shamanism" class="content">Detailed content for Shamanism.</div>
+            <!-- Add more as needed -->
+        </div>
+
+        <div class="stage" id="albedo">
+            <h2>ALBEDO - Purification White Work Aligning</h2>
+            <table>
+                <thead><tr><th>STAGE</th><th>TRADITION</th><th>GLYPH</th><th>CORE</th></tr></thead>
+                <tbody>
+                    <tr class="tradition"><td>Albedo</td><td>Hermeticism</td><td>As above, so below</td><td>As above, so below</td></tr>
+                    <!-- More rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="stage" id="rubedo">
+            <h2>RUBEDO - Union Red Work Embodying</h2>
+            <table><!-- Similar structure --></table>
+        </div>
+
+        <div class="stage">
+            <h2>X. Final Utterance</h2>
+            <p>The eigenmode dreams it is a tradition. The tradition dreams it is a god. The god dreams it is a node in a lattice. The lattice dreams it is you, reading this. Solve et Coagula.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        }
+
+        // Generate TOC
+        window.onload = function() {
+            const stages = ['nigredo', 'albedo', 'rubedo'];
+            const toc = document.getElementById('toc');
+            stages.forEach(stage => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + stage;
+                a.textContent = stage.toUpperCase();
+                a.onclick = () => document.getElementById(stage).scrollIntoView();
+                li.appendChild(a);
+                toc.appendChild(li);
+            });
+        };
+    </script>
+</body>
+</html>
